@@ -1,4 +1,6 @@
 {% extends "twitter/base.html" %}
+{% load twitter.extras %}
+{% load crispy_forms_tags %}
 {% block content %}
 <article class="media content-section">
     <img class="rounded-circle article-img" src="#">
@@ -10,7 +12,35 @@
         <a class="article-title" href="{% url 'show-tweet' tweet.id %}">
             <p class="article-content">{{ tweet.content }}</p>
         </a>
-        <small class="text-muted">aaa</small>
+        <small class="text-muted">Komentarze: {{ tweet|count_comments }}</small>
     </div>
 </article>
+{% if comments %}
+{% for comment in comments %}
+    <article class="media content-section ml-5">
+        <img class="rounded-circle article-img" src="#">
+
+        <div class="media-body">
+            <div class="article-metadata">
+                <a class="mr-2" href="#">{{ comment.user }}</a>
+                <small class="text-muted">{{ comment.creation_date|date:"F d, Y" }}</small>
+            </div>
+            <p class="article-content">{{ comment.content }}</p>
+        </div><br>
+
+    </article>
+        {% endfor %}
+{% endif %}
+ <div class="content-section">
+        <form method="post">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <label class="border-bottom mb-4">Dodaj komentarz</label>
+                {{ form|crispy }}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Wyślij</button>
+            </div>
+        </form>
+</div>
 {% endblock %}

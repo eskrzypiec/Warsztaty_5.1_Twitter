@@ -1,9 +1,11 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView
 
+from twitter.forms import AddCommentForm, SendMessageForm
 from twitter.models import *
 
 
@@ -36,7 +38,19 @@ class UserTweetView(LoginRequiredMixin, View):
 class ShowTweetView(LoginRequiredMixin, View):
     def get(self, request, id_tweet):
         tweet = get_object_or_404(Tweet, id=id_tweet)
+        comments = Comment.objects.filter(tweet_id=tweet.id)
+        form = AddCommentForm()
         return render(request, "twitter/tweet_details.html", locals())
+
+    def post(self, request, id_tweet):
+        tweet = get_object_or_404(Tweet, pk=id_tweet)
+        form = AddCommentForm(request.POST)
+        if form.is_valid():
+            content = form.cleaned_data.get('content')
+            comment = Comment(content=content, tweet=tweet, user=request.user)
+            comment.save()
+            messages.success(request, "Komentarz został dodany poprawnie")
+        return redirect("show-tweet", id_tweet=id_tweet)
 
 
 class UserReceivedMessagesView(LoginRequiredMixin, View):
@@ -53,9 +67,27 @@ class UserSentMessagesView(LoginRequiredMixin, View):
         user_messages = Message.objects.filter(sent_to_id=id_user)
         return render(request, "twitter/user_messages.html", locals())
 
+
 class MessageDetailView(LoginRequiredMixin, View):
     def get(self, request, id_message):
-        message_detail = Message.objects.get(id = id_message)
+        message_detail = Message.objects.get(id=id_message)
         message_detail.read = True
         message_detail.save()
         return render(request, "twitter/message_details.html", locals())
+
+
+class SendMessageView(LoginRequiredMixin, View):
+    def get(self, request):
+        form = SendMessageForm
+        return render(request, "twitter/add.html", locals())
+
+    def post(self, request):
+        sent_from = request.user
+        form = SendMessageForm(request.POST)
+        if form.is_valid():
+            content = form.cleaned_data.get('content')
+            sent_to = form.cleaned_data.get('sent_to')
+            message_sent = Message(content=content, sent_from=sent_from, sent_to=sent_to)
+            message_sent.save()
+            messages.success(request, "Wiadomość wysłana")
+        return redirect("messages-received")

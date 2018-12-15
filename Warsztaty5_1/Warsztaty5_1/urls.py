@@ -27,6 +27,7 @@ urlpatterns = [
     path('user_messages_received/', UserReceivedMessagesView.as_view(), name='messages-received'),
     path('user_messages_sent/', UserSentMessagesView.as_view(), name='messages-sent'),
     path('message_detail/<int:id_message>/', MessageDetailView.as_view(), name='message-details'),
+    path('send_message/', SendMessageView.as_view(), name='send-message'),
 
 
 ]

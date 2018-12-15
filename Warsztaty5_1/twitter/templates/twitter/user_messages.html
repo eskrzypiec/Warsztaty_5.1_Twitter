@@ -5,6 +5,7 @@
     {% else %}
         <h3> Wiadomości wysłane <a class="mr-2" href="{% url 'messages-received' %}">Skrzynka odbiorcza</a></h3>
     {%  endif %}
+<a class="mr-2" href="{% url 'send-message' %}">Wyślij wiadomość</a>
 {% for message in user_messages %}
 <article class="media content-section">
     <div class="media-body">
