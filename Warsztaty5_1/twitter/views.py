@@ -7,7 +7,7 @@ from django.views.generic import CreateView
 from twitter.models import *
 
 
-class MainView(View):
+class MainView(LoginRequiredMixin, View):
     def get(self, request):
         tweets = Tweet.objects.all()
         return render(request, "twitter/content_page.html", locals())
@@ -26,19 +26,20 @@ class AddTweetView(LoginRequiredMixin, CreateView):
         return super(AddTweetView, self).form_valid(form)
 
 
-class UserTweetView(View):
-    def get(self, request, id_user):
+class UserTweetView(LoginRequiredMixin, View):
+    def get(self, request):
+        id_user = request.user.id
         tweets = Tweet.objects.filter(user_id=id_user)
         return render(request, "twitter/content_page.html", locals())
 
 
-class ShowTweetView(View):
+class ShowTweetView(LoginRequiredMixin, View):
     def get(self, request, id_tweet):
         tweet = get_object_or_404(Tweet, id=id_tweet)
         return render(request, "twitter/tweet_details.html", locals())
 
 
-class UserReceivedMessagesView(View):
+class UserReceivedMessagesView(LoginRequiredMixin, View):
     def get(self, request):
         id_user = request.user.id
         user_messages = Message.objects.filter(sent_from_id=id_user)
@@ -46,13 +47,13 @@ class UserReceivedMessagesView(View):
         return render(request, "twitter/user_messages.html", locals())
 
 
-class UserSentMessagesView(View):
+class UserSentMessagesView(LoginRequiredMixin, View):
     def get(self, request):
         id_user = request.user.id
         user_messages = Message.objects.filter(sent_to_id=id_user)
         return render(request, "twitter/user_messages.html", locals())
 
-class MessageDetailView(View):
+class MessageDetailView(LoginRequiredMixin, View):
     def get(self, request, id_message):
         message_detail = Message.objects.get(id = id_message)
         message_detail.read = True

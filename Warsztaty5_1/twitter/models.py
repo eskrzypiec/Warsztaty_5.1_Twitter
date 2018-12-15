@@ -19,3 +19,12 @@ class Message(models.Model):
 
     def __str__(self):
         return f"Do: {self.sent_to}, Od: {self.sent_from}, Treść: {self.content[0:30]}"
+
+class Comment(models.Model):
+    content = models.CharField(max_length=60)
+    creation_date = models.DateTimeField(auto_now_add=True)
+    tweet = models.ForeignKey(Tweet, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Od: {self.user}, Treść: {self.content[0:30]}"

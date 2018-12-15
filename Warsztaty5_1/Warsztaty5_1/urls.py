@@ -22,7 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', MainView.as_view(), name='main'),
     path('add_tweet/', AddTweetView.as_view(), name='add-tweet'),
-    path('user_tweet/<int:id_user>/', UserTweetView.as_view(), name='user-tweet'),
+    path('user_tweet/', UserTweetView.as_view(), name='user-tweet'),
     path('tweet/<int:id_tweet>/', ShowTweetView.as_view(), name='show-tweet'),
     path('user_messages_received/', UserReceivedMessagesView.as_view(), name='messages-received'),
     path('user_messages_sent/', UserSentMessagesView.as_view(), name='messages-sent'),
