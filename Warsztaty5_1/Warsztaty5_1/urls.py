@@ -21,4 +21,7 @@ from twitter.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', MainView.as_view(), name='main'),
+    path('add_tweet/', AddTweetView.as_view(), name='add-tweet'),
+    path('user_tweet/<int:id_user>/', UserTweetView.as_view(), name='user-tweet'),
+    path('tweet/<int:id_tweet>/', ShowTweetView.as_view(), name='show-tweet'),
 ]

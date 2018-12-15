@@ -1,0 +1,16 @@
+{% extends "twitter/base.html" %}
+{% block content %}
+<article class="media content-section">
+    <img class="rounded-circle article-img" src="#">
+    <div class="media-body">
+        <div class="article-metadata">
+            <a class="mr-2" href="#">{{ tweet.user }}</a>
+            <small class="text-muted">{{ tweet.creation_date|date:"F d, Y" }}</small>
+        </div>
+        <a class="article-title" href="{% url 'show-tweet' tweet.id %}">
+            <p class="article-content">{{ tweet.content }}</p>
+        </a>
+        <small class="text-muted">aaa</small>
+    </div>
+</article>
+{% endblock %}

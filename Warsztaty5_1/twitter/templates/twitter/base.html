@@ -26,7 +26,7 @@
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
                 {% if user.is_authenticated %}
-                    <a class="nav-item nav-link" href="#">Nowy Tweet</a>
+                    <a class="nav-item nav-link" href="{% url 'add-tweet' %}">Nowy Tweet</a>
                     <a class="nav-item nav-link" href="#">Wiadomości</a>
                     <a class="nav-item nav-link" href="#">Konto </a>
                     <a class="nav-item nav-link" href="#">Logout</a>
