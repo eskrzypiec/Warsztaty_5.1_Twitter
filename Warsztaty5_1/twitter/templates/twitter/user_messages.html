@@ -1,0 +1,25 @@
+{% extends "twitter/base.html" %}
+{% block content %}
+    {%  if received %}
+    <h3> Skrzynka odbiorcza <a class="mr-2" href="{% url 'messages-sent' %}">Wiadomości wysłane</a></h3>
+    {% else %}
+        <h3> Wiadomości wysłane <a class="mr-2" href="{% url 'messages-received' %}">Skrzynka odbiorcza</a></h3>
+    {%  endif %}
+{% for message in user_messages %}
+<article class="media content-section">
+    <div class="media-body">
+        <div class="article-metadata">
+                {%  if received %}
+            Od: <a class="mr-2" href="#">{{ message.sent_from }}</a>
+                    {%  else %}
+                    Do: <a class="mr-2" href="#">{{ message.sent_to }}</a>
+                {% endif %}
+            <small class="text-muted">Data wysłania: {{ message.sent_date|date:"F d, Y" }}</small>
+        </div>
+        <a class="article-title" href="{% url 'message-details'  message.id %}">
+            <p class="article-content">Treść: {%  if received and not message.read %}<b>{{ message.content }}</b> {% else %}{{ message.content }} {% endif %}</p>
+        </a>
+    </div>
+</article>
+        {% endfor %}
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "twitter/base.html" %}
+{% block content %}
+
+<article class="media content-section">
+    <div class="media-body">
+        <div class="article-metadata">
+            <a class="mr-2" href="#">Od: {{ message_detail.sent_from }}</a>
+            <a class="mr-2" href="#">Do: {{ message_detail.sent_to }}</a>
+            <small class="text-muted">{{ message_detail.sent_date|date:"F d, Y" }}</small>
+        </div>
+            <p class="article-content">{{ message_detail.content }}</p>
+        </a>
+    </div>
+</article>
+{% endblock %}
