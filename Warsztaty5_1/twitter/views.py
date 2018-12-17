@@ -12,7 +12,7 @@ from twitter.models import *
 
 class MainView(LoginRequiredMixin, View):
     def get(self, request):
-        tweets = Tweet.objects.all()
+        tweets = Tweet.objects.filter(blocked=False)
         return render(request, "twitter/content_page.html", locals())
 
 
@@ -32,14 +32,14 @@ class AddTweetView(LoginRequiredMixin, CreateView):
 class UserTweetView(LoginRequiredMixin, View):
     def get(self, request):
         id_user = request.user.id
-        tweets = Tweet.objects.filter(user_id=id_user)
+        tweets = Tweet.objects.filter(user_id=id_user, blocked=False)
         return render(request, "twitter/content_page.html", locals())
 
 
 class ShowTweetView(LoginRequiredMixin, View):
     def get(self, request, id_tweet):
-        tweet = get_object_or_404(Tweet, id=id_tweet)
-        comments = Comment.objects.filter(tweet_id=tweet.id)
+        tweet = get_object_or_404(Tweet, id=id_tweet, blocked=False)
+        comments = Comment.objects.filter(tweet_id=tweet.id, blocked=False)
         form = AddCommentForm()
         return render(request, "twitter/tweet_details.html", locals())
 
@@ -48,7 +48,7 @@ class ShowTweetView(LoginRequiredMixin, View):
         form = AddCommentForm(request.POST)
         if form.is_valid():
             content = form.cleaned_data.get('content')
-            comment = Comment(content=content, tweet=tweet, user=request.user)
+            comment = Comment(content=content, tweet=tweet, user=request.user, blocked=False)
             comment.save()
             messages.success(request, "Komentarz został dodany poprawnie")
         return redirect("show-tweet", id_tweet=id_tweet)
@@ -57,7 +57,7 @@ class ShowTweetView(LoginRequiredMixin, View):
 class UserReceivedMessagesView(LoginRequiredMixin, View):
     def get(self, request):
         id_user = request.user.id
-        user_messages = Message.objects.filter(sent_to_id=id_user)
+        user_messages = Message.objects.filter(sent_to_id=id_user, blocked=False)
         received = True
         return render(request, "twitter/user_messages.html", locals())
 
@@ -65,7 +65,7 @@ class UserReceivedMessagesView(LoginRequiredMixin, View):
 class UserSentMessagesView(LoginRequiredMixin, View):
     def get(self, request):
         id_user = request.user.id
-        user_messages = Message.objects.filter(sent_from_id=id_user)
+        user_messages = Message.objects.filter(sent_from_id=id_user, blocked=False)
         return render(request, "twitter/user_messages.html", locals())
 
 
@@ -88,7 +88,7 @@ class SendMessageView(LoginRequiredMixin, View):
         if form.is_valid():
             content = form.cleaned_data.get('content')
             sent_to = form.cleaned_data.get('sent_to')
-            message_sent = Message(content=content, sent_from=sent_from, sent_to=sent_to)
+            message_sent = Message(content=content, sent_from=sent_from, sent_to=sent_to, blocked=False)
             message_sent.save()
             messages.success(request, "Wiadomość wysłana")
         return redirect("messages-received")
