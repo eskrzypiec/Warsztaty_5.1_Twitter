@@ -13,3 +13,6 @@ class SendMessageForm(forms.ModelForm):
     class Meta:
         model = Message
         fields = ['content', 'sent_to']
+
+
+

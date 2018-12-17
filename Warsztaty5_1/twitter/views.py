@@ -4,6 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView
+from django.contrib.auth import views as auth_views
 
 from twitter.forms import AddCommentForm, SendMessageForm
 from twitter.models import *
@@ -91,3 +92,12 @@ class SendMessageView(LoginRequiredMixin, View):
             message_sent.save()
             messages.success(request, "Wiadomość wysłana")
         return redirect("messages-received")
+
+
+class LoginUserView(auth_views.LoginView):
+    redirect_authenticated_user = True
+    template_name = "twitter/login.html"
+
+
+class LogoutUserView(auth_views.LogoutView):
+    template_name = 'twitter/logout.html'
