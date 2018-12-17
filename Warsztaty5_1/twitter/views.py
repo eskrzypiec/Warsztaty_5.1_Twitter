@@ -12,7 +12,7 @@ from twitter.models import *
 
 class MainView(LoginRequiredMixin, View):
     def get(self, request):
-        tweets = Tweet.objects.filter(blocked=False)
+        tweets = Tweet.objects.filter(blocked=False).order_by("-creation_date")
         return render(request, "twitter/content_page.html", locals())
 
 
@@ -32,7 +32,7 @@ class AddTweetView(LoginRequiredMixin, CreateView):
 class UserTweetView(LoginRequiredMixin, View):
     def get(self, request):
         id_user = request.user.id
-        tweets = Tweet.objects.filter(user_id=id_user, blocked=False)
+        tweets = Tweet.objects.filter(user_id=id_user, blocked=False).order_by("-creation_date")
         return render(request, "twitter/content_page.html", locals())
 
 
@@ -57,7 +57,7 @@ class ShowTweetView(LoginRequiredMixin, View):
 class UserReceivedMessagesView(LoginRequiredMixin, View):
     def get(self, request):
         id_user = request.user.id
-        user_messages = Message.objects.filter(sent_to_id=id_user, blocked=False)
+        user_messages = Message.objects.filter(sent_to_id=id_user, blocked=False).order_by("-sent_date")
         received = True
         return render(request, "twitter/user_messages.html", locals())
 
@@ -65,7 +65,7 @@ class UserReceivedMessagesView(LoginRequiredMixin, View):
 class UserSentMessagesView(LoginRequiredMixin, View):
     def get(self, request):
         id_user = request.user.id
-        user_messages = Message.objects.filter(sent_from_id=id_user, blocked=False)
+        user_messages = Message.objects.filter(sent_from_id=id_user, blocked=False).order_by("-sent_date")
         return render(request, "twitter/user_messages.html", locals())
 
 
