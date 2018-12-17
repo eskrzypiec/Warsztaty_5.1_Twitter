@@ -57,7 +57,7 @@ class ShowTweetView(LoginRequiredMixin, View):
 class UserReceivedMessagesView(LoginRequiredMixin, View):
     def get(self, request):
         id_user = request.user.id
-        user_messages = Message.objects.filter(sent_from_id=id_user)
+        user_messages = Message.objects.filter(sent_to_id=id_user)
         received = True
         return render(request, "twitter/user_messages.html", locals())
 
@@ -65,7 +65,7 @@ class UserReceivedMessagesView(LoginRequiredMixin, View):
 class UserSentMessagesView(LoginRequiredMixin, View):
     def get(self, request):
         id_user = request.user.id
-        user_messages = Message.objects.filter(sent_to_id=id_user)
+        user_messages = Message.objects.filter(sent_from_id=id_user)
         return render(request, "twitter/user_messages.html", locals())
 
 
