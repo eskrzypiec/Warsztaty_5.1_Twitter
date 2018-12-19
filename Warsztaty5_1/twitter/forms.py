@@ -14,5 +14,3 @@ class SendMessageForm(forms.ModelForm):
         model = Message
         fields = ['content', 'sent_to']
 
-
-

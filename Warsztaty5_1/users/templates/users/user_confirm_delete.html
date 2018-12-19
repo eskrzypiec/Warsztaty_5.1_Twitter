@@ -1,0 +1,14 @@
+{% extends "twitter/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<form action="#" method="post">
+    {% csrf_token %}
+    Czy na pewno chcesz usunąć konto {{ user.email }} ?
+    {{ form|crispy }}
+    <input type="submit" value="Wyślij">
+    <a class="article-title" href="{% url 'profile' %}">
+        <p class="article-content"><b>Powrót</b></p></a>
+</form>
+
+{% endblock %}

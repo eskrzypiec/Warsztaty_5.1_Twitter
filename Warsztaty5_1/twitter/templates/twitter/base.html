@@ -26,11 +26,11 @@
                 {% if user.is_authenticated %}
                     <a class="nav-item nav-link" href="{% url 'add-tweet' %}">Nowy Tweet</a>
                     <a class="nav-item nav-link" href="{%  url 'messages-received' %}">Wiadomości</a>
-                    <a class="nav-item nav-link" href="#">Konto </a>
+                    <a class="nav-item nav-link" href="{% url 'profile' %}">Konto </a>
                     <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
                 {% else %}
                     <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
-                    <a class="nav-item nav-link" href="#">Zarejestruj</a>
+                    <a class="nav-item nav-link" href="{% url 'register' %}">Zarejestruj</a>
                 {% endif %}
             </div>
           </div>
