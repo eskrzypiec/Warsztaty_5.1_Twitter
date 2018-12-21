@@ -13,7 +13,7 @@ from twitter.models import *
 class MainView(View):
     def get(self, request):
         tweets = Tweet.objects.filter(blocked=False).order_by("-creation_date")
-        return render(request, "twitter/content_page.html", locals())
+        return render(request, "twitter/content_page.html", {'tweets':tweets})
 
 
 class AddTweetView(LoginRequiredMixin, CreateView):
@@ -33,7 +33,7 @@ class UserTweetView(LoginRequiredMixin, View):
     def get(self, request):
         id_user = request.user.id
         tweets = Tweet.objects.filter(user_id=id_user, blocked=False).order_by("-creation_date")
-        return render(request, "twitter/content_page.html", locals())
+        return render(request, "twitter/content_page.html", {'id_user': id_user, 'tweets': tweets})
 
 
 class ShowTweetView(LoginRequiredMixin, View):
@@ -41,7 +41,7 @@ class ShowTweetView(LoginRequiredMixin, View):
         tweet = get_object_or_404(Tweet, id=id_tweet, blocked=False)
         comments = Comment.objects.filter(tweet_id=tweet.id, blocked=False)
         form = AddCommentForm()
-        return render(request, "twitter/tweet_details.html", locals())
+        return render(request, "twitter/tweet_details.html", {'tweet':tweet, 'comments':comments, 'form':form})
 
     def post(self, request, id_tweet):
         tweet = get_object_or_404(Tweet, pk=id_tweet)
@@ -59,14 +59,14 @@ class UserReceivedMessagesView(LoginRequiredMixin, View):
         id_user = request.user.id
         user_messages = Message.objects.filter(sent_to_id=id_user, blocked=False).order_by("-sent_date")
         received = True
-        return render(request, "twitter/user_messages.html", locals())
+        return render(request, "twitter/user_messages.html", {'id_user':id_user, 'user_messages':user_messages, 'received':received})
 
 
 class UserSentMessagesView(LoginRequiredMixin, View):
     def get(self, request):
         id_user = request.user.id
         user_messages = Message.objects.filter(sent_from_id=id_user, blocked=False).order_by("-sent_date")
-        return render(request, "twitter/user_messages.html", locals())
+        return render(request, "twitter/user_messages.html", {'id_user':id_user, 'user_messages':user_messages})
 
 
 class MessageDetailView(LoginRequiredMixin, View):
@@ -74,13 +74,13 @@ class MessageDetailView(LoginRequiredMixin, View):
         message_detail = Message.objects.get(id=id_message)
         message_detail.read = True
         message_detail.save()
-        return render(request, "twitter/message_details.html", locals())
+        return render(request, "twitter/message_details.html", {'message_detail':message_detail})
 
 
 class SendMessageView(LoginRequiredMixin, View):
     def get(self, request):
         form = SendMessageForm
-        return render(request, "twitter/add.html", locals())
+        return render(request, "twitter/add.html", {'form':form})
 
     def post(self, request):
         sent_from = request.user
