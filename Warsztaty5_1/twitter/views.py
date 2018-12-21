@@ -6,7 +6,7 @@ from django.views import View
 from django.views.generic import CreateView
 from django.contrib.auth import views as auth_views, authenticate, login
 
-from twitter.forms import AddCommentForm, SendMessageForm
+from twitter.forms import AddCommentForm, SendMessageForm, SendMessageToUserForm
 from twitter.models import *
 
 
@@ -27,6 +27,11 @@ class AddTweetView(LoginRequiredMixin, CreateView):
         tweet.user = self.request.user
         tweet.save()
         return super(AddTweetView, self).form_valid(form)
+
+class SingleUserTweetView(LoginRequiredMixin, View):
+    def get(self, request, user_id):
+        tweets = Tweet.objects.filter(user_id=user_id, blocked=False).order_by("-creation_date")
+        return render(request, "twitter/users_tweets.html", {'id_user': user_id, 'tweets': tweets})
 
 
 class UserTweetView(LoginRequiredMixin, View):
@@ -94,3 +99,19 @@ class SendMessageView(LoginRequiredMixin, View):
         return redirect("messages-received")
 
 
+class SendMessageToUserView(LoginRequiredMixin, View):
+    def get(self, request, user_id):
+        user_id=user_id
+        form = SendMessageToUserForm
+        return render(request, "twitter/add.html", {'form':form, 'user_id':user_id})
+
+    def post(self, request, user_id):
+        sent_from = request.user
+        sent_to = User.objects.get(id=user_id)
+        form = SendMessageToUserForm(request.POST)
+        if form.is_valid():
+            content = form.cleaned_data.get('content')
+            message_sent = Message(content=content, sent_from=sent_from, sent_to=sent_to, blocked=False)
+            message_sent.save()
+            messages.success(request, "Wiadomość wysłana")
+        return redirect("main")

@@ -14,3 +14,8 @@ class SendMessageForm(forms.ModelForm):
         model = Message
         fields = ['content', 'sent_to']
 
+
+class SendMessageToUserForm(forms.ModelForm):
+    class Meta:
+        model = Message
+        fields = ['content']

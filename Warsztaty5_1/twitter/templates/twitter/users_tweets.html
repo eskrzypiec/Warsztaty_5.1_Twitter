@@ -8,6 +8,7 @@
         <div class="article-metadata">
             <a class="mr-2" href="{% url 'user-tweets' tweet.user.id %}">{{ tweet.user }}</a>
             <small class="text-muted">{{ tweet.creation_date|date:"F d, Y" }}</small>
+            <a class="mr-2" href="{% url 'send-message-to-user' tweet.user.id %}">Wyślij wiadomość</a>
         </div>
         <a class="article-title" href="{% url 'show-tweet' tweet.id %}">
             <p class="article-content">{{ tweet.content }}</p>
