@@ -20,7 +20,7 @@ class LoginUserView(View):
         form = LoginForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data.get('email')
-            username = User.objects.filter(email=email.lower())[0]
+            username = User.objects.filter(email=email.lower()).first()
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
